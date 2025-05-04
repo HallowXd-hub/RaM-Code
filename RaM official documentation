@@ -1,0 +1,148 @@
+# RaM Language Official Documentation  
+*(Version 2.0, Author: HallowXd)*  
+
+---
+
+## 1. Core Syntax  
+
+### Variables (Van)  
+Van(<name>)(<type> <value>)  // Type is required  
+ 
+Supported Types:  
+- tw (textword): Strings - Van(name)(tw "Hallow")  
+- tbn (textbynumber): Integers - Van(age)(tbn 25)  
+- tfn (textfloatnumber): Floats - Van(pi)(tfn 3.14)  
+- hex: Hexadecimal - Van(color)(hex 0xFF0000)  
+- truth/lie: Booleans - Van(is_active)(truth)  
+- null: Empty value - Van(error)(null)  
+
+---
+
+### Modules (mod)  
+mod <name>:  
+  <variables and functions>  
+End mod  
+ 
+Example:  
+mod Math:  
+  cog add(a, b):  
+    return a + b  
+  End cog  
+End mod  
+
+Consoleprint(Math.add(2, 3))  // Output: 5  
+---
+
+### Mechanisms (mechanism)  
+mechanism <name>:  
+  <state and methods>  
+End mechanism  
+ 
+Example:  
+mechanism Robot:  
+  Van(name)(tw "R2-D2")  
+  cog greet():  
+    Consoleprint("Beep! I'm " + name)  
+  End cog  
+End mechanism  
+
+Robot.greet()  // Output: Beep! I'm R2-D2  
+---
+
+## 2. Data Structures  
+
+### Bag (Dynamic Array)  
+Van(items)(Bag[tw "Sword", tbn 42])  
+items.push(tw "Shield")  // Add item  
+Van(last_item) = items.pop()  // Remove last item  
+### Box (Dictionary)  
+Van(stats)(Box{"hp" = tbn 100, "atk" = tbn 50})  
+stats.insert("def", tbn 30)  // Add key  
+Van(hp) = stats.get("hp")    // Get value  
+### Struct (Custom Objects)  
+Van(player)(Struct{  
+  name = tw "Hallow",  
+  hp = tbn 100,  
+  pos = Struct{x = tfn 1.5, y = tfn 3.2}  
+})  
+Consoleprint(player.name)  // Output: Hallow  
+---
+
+## 3. Control Flow  
+
+### Conditions (Gear)  
+Gear <condition>:  
+  <code>  
+[Else:  
+  <code>]  
+End Gear  
+ 
+Example:  
+Gear health > 0:  
+  Consoleprint("Alive!")  
+Else:  
+  valve("Game Over")  
+End Gear  
+### Loops (Cranshaft)  
+Cranshaft <start>/<end>:  // Repeats (end - start + 1) times  
+  <code>  // 'current' stores iteration  
+End Cranshaft  
+ 
+Examples:  
+Cranshaft 1/3:  // Runs 3 times (1, 2, 3)  
+  Consoleprint("Step " + current)  
+End Cranshaft  
+
+Cranshaft 0..5:  // Runs 6 times (0 to 5)  
+  Consoleprint(current)  
+End Cranshaft  
+### Error Handling (valve + SafeGear)  
+valve("Error message")  // Throws error  
+
+SafeGear:  
+  <risky code>  
+CatchGear(err):  
+  <handle error>  
+End SafeGear  
+---
+
+## 4. Standard Modules  
+
+### Random  
+Van(dice_roll)(Random.roll(tbn 1, tbn 6))  // Random integer  
+### Time  
+Time.delay(tbn 2)  // Pauses for 2 seconds  
+### File (Planned for v2.1)  
+// Coming soon: File.read(), File.write()  
+---
+
+## 5. Full Example  
+mod Game:  
+  Van(players)(Bag[Struct{name = tw "Hallow", hp = tbn 100}])  
+
+  cog add_player(name):  
+    players.push(Struct{name = name, hp = tbn 100})  
+  End cog  
+End mod  
+
+mechanism Enemy:  
+  Van(damage)(Random.roll(tbn 5, tbn 10))  
+
+  cog attack(target):  
+    target.hp -= damage  
+    Consoleprint("Dealt " + damage + " damage!")  
+  End cog  
+End mechanism  
+
+// Execution  
+Game.add_player(tw "Alice")  
+Van(boss)(Enemy)  
+boss.attack(Game.players[0])  
+---
+
+## 6. Roadmap  
+- v2.1: File I/O, networking  
+- v2.2: Multithreading with Portal  
+- v2.3: Debugging tools  
+
+---
